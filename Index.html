@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nusantara Bergolak: Jejak Para Penakluk</title>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700;800&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e4eaec;--surf:#f6f8f8;--ink:#14232e;--mut:#4d6270;--line:#b7c5cc;--gold:#9a6b14;--seal:#9c2f2f;--ok:#1f7a4d;--okbg:#dcefe5;--badbg:#f5dede;--sel:#d7e6ee;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1b26;--surf:#142a3a;--ink:#e8eef1;--mut:#9fb4c0;--line:#2c4658;--gold:#e0b04f;--seal:#e27a72;--ok:#6fd0a0;--okbg:#17382b;--badbg:#3d1f21;--sel:#1f3d52;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1b26;--surf:#142a3a;--ink:#e8eef1;--mut:#9fb4c0;--line:#2c4658;--gold:#e0b04f;--seal:#e27a72;--ok:#6fd0a0;--okbg:#17382b;--badbg:#3d1f21;--sel:#1f3d52;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 "Source Sans 3",system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:16px}
+h1,h2,h3{font-family:Alegreya,Georgia,serif;line-height:1.15;margin:0 0 .4em}
+h1{font-size:2.6rem;font-weight:800}h2{font-size:1.7rem}h3{font-size:1.2rem}
+.hud{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surf);border:1px solid var(--line);border-radius:10px;margin-bottom:14px;font-weight:600}
+.route{display:flex;gap:6px;margin-bottom:14px}
+.route div{flex:1;padding:8px 6px;border:2px solid var(--line);border-radius:8px;text-align:center;font-size:.82rem;color:var(--mut);background:var(--surf)}
+.route .on{border-color:var(--gold);color:var(--ink);font-weight:600}
+.route .done{background:var(--ok);border-color:var(--ok);color:#fff}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
+.tag{display:inline-block;font-size:.85rem;font-weight:600;color:var(--gold);margin-bottom:6px}
+.q{font-size:1.1rem;margin:0 0 12px}
+button{font:inherit;cursor:pointer;color:var(--ink)}
+.opt{display:block;width:100%;text-align:left;padding:10px 12px;margin-bottom:8px;border:2px solid var(--line);border-radius:8px;background:var(--bg)}
+.opt:hover{border-color:var(--gold)}.opt.sel{background:var(--sel);border-color:var(--gold)}
+.go{padding:11px 22px;border:0;border-radius:8px;background:var(--ink);color:var(--bg);font-weight:600;margin-top:6px}
+.go.alt{background:transparent;color:var(--ink);border:2px solid var(--line)}
+button:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.fb{margin-top:12px;padding:12px;border-radius:8px;font-size:.98rem}
+.fb.ok{background:var(--okbg)}.fb.bad{background:var(--badbg)}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.row span{flex:1;min-width:180px}
+.tf{padding:6px 14px;border:2px solid var(--line);border-radius:8px;background:var(--bg)}
+.tf.sel{background:var(--sel);border-color:var(--gold);font-weight:600}
+.pool,.slot{min-height:46px;border:2px dashed var(--line);border-radius:8px;padding:6px;display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
+.slot b{flex-basis:100%;font-weight:600;font-size:.95rem}
+.slot.hit,.pool.hit{border-color:var(--gold);background:var(--sel)}
+.chip{padding:5px 10px;border:2px solid var(--gold);border-radius:20px;background:var(--surf);cursor:grab;font-size:.95rem}
+.chip.sel{background:var(--gold);color:var(--bg)}
+select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:8px;padding:8px;max-width:100%}
+textarea{width:100%;min-height:90px}
+.ar{padding:2px 10px;border:2px solid var(--line);border-radius:6px;background:var(--bg)}
+.lives{color:var(--seal);letter-spacing:2px}
+.big{font-size:3rem;margin:0}
+.badge{display:inline-block;padding:8px 14px;border:2px solid var(--gold);border-radius:8px;font-weight:700;font-family:Alegreya,serif;margin:4px 6px 4px 0}
+.muted{color:var(--mut)}
+@media (prefers-reduced-motion:no-preference){.card{animation:in .25s ease-out}@keyframes in{from{opacity:0;transform:translateY(6px)}}}
+</style>
+</head>
+<body>
+<main>
+<div id="hud"></div>
+<div id="route"></div>
+<div id="app"></div>
+</main>
+<script>
+const Z=[
+{n:"Pelabuhan Rempah Malaka",ic:"🏴",m:"Portugis (1511–1600an)",b:"Penjelajah Rempah",pt:100,
+qs:[
+{t:"pg",p:10,q:"Portugis menguasai Malaka pada 1511 di bawah Alfonso d’Albuquerque. Tujuan strategis utamanya adalah...",o:["Menjadikan Malaka pusat penyebaran Islam","Menguasai jalur perdagangan rempah di Asia Tenggara","Membangun koloni permukiman warga Portugis","Menggulingkan Kerajaan Majapahit","Mendirikan sekolah misi pertama di Asia"],a:1,e:"Malaka adalah simpul perdagangan rempah; menguasainya berarti mengendalikan jalurnya."},
+{t:"pgk",p:20,q:"Pilih SEMUA wilayah yang menjadi pusat kegiatan Portugis pada abad ke-16:",o:["Ternate","Ambon","Banten","Timor (Solor/Flores)","Makassar"],a:[0,1,3],e:"Banten dan Makassar bukan basis Portugis; Makassar justru menampung pedagang yang menghindari monopoli."},
+{t:"tf",p:10,q:"Tentukan Benar atau Salah:",s:[["Semboyan 3G pelayaran Eropa adalah Gold, Glory, Gospel.",1],["Portugis berhasil memonopoli penuh rempah di seluruh Nusantara.",0],["Perlawanan Sultan Baabullah dari Ternate mengusir Portugis dari Maluku pada 1575.",1]],e:"Monopoli Portugis tidak pernah sepenuhnya berhasil karena perlawanan dan persaingan."}
+]},
+{n:"Benteng Batavia",ic:"🏰",m:"VOC (1602–1799)",b:"Penjaga Benteng",pt:150,
+qs:[
+{t:"pg",p:10,q:"Hak istimewa VOC untuk memiliki tentara, mencetak uang, dan membuat perjanjian dengan penguasa lokal disebut...",o:["Hak tanam paksa","Hak oktroi","Preangerstelsel","Verplichte leverantie","Ekstirpasi"],a:1,e:"Hak oktroi adalah hak istimewa dari pemerintah Belanda kepada VOC."},
+{t:"dnd",p:20,q:"Seret (atau ketuk kartu lalu ketuk kotak) istilah ke definisi yang tepat. Ada kartu pengecoh!",z:["Penebangan pohon rempah agar harga tidak jatuh","Pelayaran armada untuk mengawasi pelanggaran monopoli","Kewajiban rakyat menyerahkan hasil bumi dengan harga VOC","Politik memecah belah untuk menguasai"],c:[["Ekstirpasi",0],["Pelayaran Hongi",1],["Verplichte Leverantie",2],["Devide et Impera",3],["Preangerstelsel",-1],["Rodi",-1]],e:"Preangerstelsel dan rodi bukan jawaban di sini (pengecoh)."},
+{t:"pgk",p:20,q:"Pilih SEMUA faktor penyebab kebangkrutan VOC:",o:["Korupsi merajalela di kalangan pegawai","Biaya perang dan pemeliharaan tentara sangat besar","Persaingan dagang dengan Inggris dan Prancis","Rakyat Nusantara bebas berdagang penuh","Dividen tinggi padahal keuangan merosot"],a:[0,1,2,4],e:"VOC dibubarkan 31 Desember 1799."}
+]},
+{n:"Persimpangan Daendels-Raffles",ic:"🛤️",m:"Republik Bataaf & Inggris (1800–1816)",b:"Pembuka Jalan",pt:150,
+qs:[
+{t:"match",p:25,q:"Jodohkan tokoh/peran dengan kebijakannya:",l:["Daendels","Janssens","Raffles (bidang ekonomi)","Raffles (bidang ilmu)"],r:["Jalan Raya Pos Anyer–Panarukan","Menyerah kepada Inggris di Tuntang (1811)","Sistem sewa tanah (landrent)","Menulis History of Java"],a:[0,1,2,3],e:"Daendels membangun Jalan Raya Pos; Janssens menyerah di Tuntang; Raffles menerapkan landrent dan menulis History of Java."},
+{t:"order",p:25,q:"Urutkan dari peristiwa paling awal:",i:["Pembubaran VOC (1799)","Daendels menjabat Gubernur Jenderal (1808)","Kapitulasi Tuntang (1811)","Raffles berkuasa di Jawa","Belanda kembali ke Hindia (1816)"],e:"Urutan: VOC bubar → Daendels → Tuntang → Raffles → Belanda kembali."},
+{t:"tf",p:10,q:"Tentukan Benar atau Salah:",s:[["Jalan Raya Pos dibangun dengan kerja rodi yang menimbulkan banyak korban.",1],["Sistem sewa tanah Raffles langsung menyejahterakan seluruh petani Jawa.",0],["Tujuan utama Daendels adalah mempertahankan Jawa dari serangan Inggris.",1]],e:"Petani kesulitan karena sistem uang dan pajak belum dikenal."}
+]},
+{n:"Kabut Fajar Asia",ic:"🌅",m:"Pendudukan Jepang (1942–1945)",b:"Pemulih Ingatan",pt:300,
+qs:[
+{t:"pg",p:10,q:"Organisasi bentukan Jepang untuk menghimpun pemuda dan pembantu prajurit demi kepentingan perang adalah...",o:["Budi Utomo","Putera","Seinendan dan Heiho","Sarekat Islam","Indische Partij"],a:2,e:"Seinendan: barisan pemuda; Heiho: pembantu prajurit Jepang."},
+{t:"dnd",p:20,q:"Kelompokkan kebijakan Jepang ke bidangnya:",z:["🪖 Militer","💰 Ekonomi","👥 Sosial-budaya"],c:[["PETA",0],["Heiho",0],["Romusha",1],["Penyerahan padi wajib",1],["Tonarigumi",2],["Larangan bahasa Belanda",2]],e:"Romusha dan penyerahan padi adalah eksploitasi ekonomi/tenaga."},
+{t:"order",p:25,q:"Urutkan dari peristiwa paling awal:",i:["Jepang mendarat di Jawa","Kapitulasi Kalijati","Pembentukan PETA","Janji kemerdekaan (Koiso)","Pembentukan BPUPKI"],e:"1942 pendaratan dan Kalijati → 1943 PETA → 1944 janji Koiso → 1945 BPUPKI."}
+]}
+];
+const BOSS=[
+{p:50,t:"Fase 1 · Analisis perbandingan",q:"Bandingkan monopoli VOC dan pendudukan Jepang dalam mengeksploitasi sumber daya Nusantara. Sebutkan minimal satu persamaan dan satu perbedaan.",g:"Persamaan: sama-sama menguras hasil bumi dan tenaga rakyat demi penguasa, dengan paksaan. Perbedaan: VOC berorientasi dagang dan laba (korporasi); Jepang berorientasi kebutuhan perang dengan kontrol total atas ekonomi, tenaga manusia, dan propaganda."},
+{p:75,t:"Fase 2 · Evaluasi sebab-akibat",q:"“Penjajahan Jepang hanya 3,5 tahun, namun paling mempercepat kemerdekaan Indonesia.” Setujukah kamu? Beri dua argumen berbukti.",g:"Argumen kuat: PETA dan Heiho memberi pengalaman militer; organisasi massa melatih mobilisasi; struktur kolonial Belanda runtuh; penderitaan romusha menguatkan tekad; janji kemerdekaan melahirkan BPUPKI/PPKI; kekalahan Jepang menciptakan kekosongan kekuasaan. Argumen menolak (fondasi pergerakan sejak 1908) juga sah bila berbukti."},
+{p:75,t:"Fase 3 · Sintesis",q:"Kamu Arsiparis Agung. Tulis SATU kalimat pelajaran (maks. 25 kata) dari seluruh kolonialisme Portugis–VOC–Bataaf–Inggris–Jepang untuk generasi 2045.",g:"Kalimat yang kuat menyebut pola (eksploitasi/monopoli), dampak bagi rakyat, dan nilai (persatuan, kewaspadaan, kedaulatan)."}
+];
+const S={z:-1,q:0,right:0,pts:0,items:0,badges:[],lives:3,bi:0,bwin:0,hidden:[]};
+const $=id=>document.getElementById(id),A=$("app");
+const LBL={pg:"Pilihan Ganda",pgk:"Pilihan Ganda Kompleks",tf:"Benar / Salah",dnd:"Drag and Drop",match:"Menjodohkan",order:"Mengurutkan"};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+function hud(){
+ $("hud").innerHTML=`<span>⭐ ${S.pts} poin</span><span>🧭 Kompas: ${S.items}</span><span>${S.z<0?"Siap bermain":S.z>3?"Boss Battle":"Zona "+(S.z+1)+" dari 4"}</span>`;
+ $("route").innerHTML=`<div class="route">${Z.map((z,i)=>`<div class="${S.z>i?"done":S.z===i?"on":""}">${z.ic}<br>${i+1}</div>`).join("")}<div class="${S.z>3?"on":""}">👑<br>Boss</div></div>`.replace(/^<div class="route">|<\/div>$/g,m=>m)
+}
+function start(){Object.assign(S,{z:-1,q:0,right:0,pts:0,items:0,badges:[],lives:3,bi:0,bwin:0});hud();
+ A.innerHTML=`<div class="card"><h1>Nusantara Bergolak</h1><h3>Jejak Para Penakluk</h3>
+ <p>Tahun 2045. Kamu adalah <b>Arsiparis Waktu</b>, penjaga Arsip Nusantara yang rusak oleh <b>Kabut Lupa</b>. Lembaran sejarah kolonialisme tercerai-berai di empat wilayah. Susun ulang bukti, jawab teka-teki, dan pulihkan ingatan bangsa.</p>
+ <p class="muted">Lulus tiap zona dengan benar minimal 2 dari 3 soal. Tiap zona yang lulus memberi lencana, poin, dan 1 Kompas (menyingkirkan 1 opsi salah pada soal Pilihan Ganda).</p>
+ ${Z.map((z,i)=>`<div class="row"><span><b>${z.ic} Zona ${i+1}: ${z.n}</b><br><span class="muted">${z.m}</span></span></div>`).join("")}
+ <button class="go" onclick="zone(0)">Mulai petualangan</button></div>`}
+function zone(i){S.z=i;S.q=0;S.right=0;hud();
+ const z=Z[i];A.innerHTML=`<div class="card"><h2>${z.ic} ${z.n}</h2><p>${z.m}</p><p class="muted">Hadiah: lencana <b>${z.b}</b> + ${z.pt} poin + 1 Kompas</p><button class="go" onclick="ask()">Masuk zona</button></div>`}
+function shuf(a){let b=a.slice();do{for(let i=b.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[b[i],b[j]]=[b[j],b[i]]}}while(b.length>1&&b.every((x,i)=>x===a[i]));return b}
+function ask(){
+ const z=Z[S.z],q=z.qs[S.q];
+ A.innerHTML=`<div class="card"><span class="tag">${LBL[q.t]} · soal ${S.q+1}/3 · ${q.p} poin</span><p class="q">${q.q}</p><div id="body"></div><div id="fb"></div><div id="ctl"><button class="go" id="chk">Periksa jawaban</button> ${q.t==="pg"&&S.items?`<button class="go alt" id="kp">🧭 Pakai Kompas</button>`:""}</div></div>`;
+ const chk=BUILD[q.t](q,$("body"));
+ $("chk").onclick=()=>{const ok=chk();if(ok)S.right++,S.pts+=q.p;
+  $("fb").innerHTML=`<div class="fb ${ok?"ok":"bad"}"><b>${ok?"Benar!":"Belum tepat."}</b> ${q.e}</div>`;
+  $("ctl").innerHTML=`<button class="go" onclick="next()">${S.q<2?"Soal berikutnya":"Lihat hasil zona"}</button>`;
+  document.querySelectorAll("#body button,#body select").forEach(b=>b.disabled=true)};
+ if($("kp"))$("kp").onclick=()=>{const w=[...document.querySelectorAll(".opt:not(.sel)")].filter(b=>+b.dataset.i!==q.a);if(w.length){w[Math.random()*w.length|0].style.display="none";S.items--;hud();$("kp").remove()}}
+}
+const BUILD={
+pg(q,el){let s=-1;el.innerHTML=q.o.map((o,i)=>`<button class="opt" data-i="${i}">${String.fromCharCode(65+i)}. ${o}</button>`).join("");
+ el.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{s=+b.dataset.i;el.querySelectorAll(".opt").forEach(x=>x.classList.toggle("sel",x===b))});return()=>s===q.a},
+pgk(q,el){const s=new Set;el.innerHTML=q.o.map((o,i)=>`<button class="opt" data-i="${i}">☐ ${o}</button>`).join("");
+ el.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;s.has(i)?s.delete(i):s.add(i);b.classList.toggle("sel",s.has(i));b.textContent=(s.has(i)?"☑ ":"☐ ")+q.o[i]});
+ return()=>s.size===q.a.length&&q.a.every(i=>s.has(i))},
+tf(q,el){const v=q.s.map(()=>-1);el.innerHTML=q.s.map((x,i)=>`<div class="row"><span>${i+1}. ${x[0]}</span><button class="tf" data-i="${i}" data-v="1">Benar</button><button class="tf" data-i="${i}" data-v="0">Salah</button></div>`).join("");
+ el.querySelectorAll(".tf").forEach(b=>b.onclick=()=>{v[b.dataset.i]=+b.dataset.v;el.querySelectorAll(`.tf[data-i="${b.dataset.i}"]`).forEach(x=>x.classList.toggle("sel",x===b))});
+ return()=>q.s.every((x,i)=>v[i]===x[1])},
+dnd(q,el){const pl=q.c.map(()=>-1);let sel=-1;
+ const chip=i=>`<button class="chip${sel===i?" sel":""}" draggable="true" data-c="${i}">${q.c[i][0]}</button>`;
+ function draw(){el.innerHTML=`<div class="pool" data-t="-1">${q.c.map((c,i)=>pl[i]<0?chip(i):"").join("")}</div>`+q.z.map((z,k)=>`<div class="slot" data-t="${k}"><b>${z}</b>${q.c.map((c,i)=>pl[i]===k?chip(i):"").join("")}</div>`).join("");
+  el.querySelectorAll(".chip").forEach(c=>{c.onclick=e=>{e.stopPropagation();sel=sel===+c.dataset.c?-1:+c.dataset.c;draw()};c.ondragstart=e=>{sel=+c.dataset.c;e.dataTransfer.setData("text","x")}});
+  el.querySelectorAll("[data-t]").forEach(t=>{const put=()=>{if(sel>=0){pl[sel]=+t.dataset.t;sel=-1;draw()}};t.onclick=put;t.ondragover=e=>{e.preventDefault();t.classList.add("hit")};t.ondragleave=()=>t.classList.remove("hit");t.ondrop=e=>{e.preventDefault();put()}})}
+ draw();return()=>q.c.every((c,i)=>pl[i]===c[1])},
+match(q,el){const v=q.l.map(()=>-1);const ord=shuf(q.r.map((_,i)=>i));
+ el.innerHTML=q.l.map((l,i)=>`<div class="row"><span><b>${l}</b></span><select data-i="${i}"><option value="-1">Pilih...</option>${ord.map(j=>`<option value="${j}">${q.r[j]}</option>`).join("")}</select></div>`).join("");
+ el.querySelectorAll("select").forEach(s=>s.onchange=()=>v[s.dataset.i]=+s.value);return()=>q.a.every((a,i)=>v[i]===a)},
+order(q,el){let a=shuf(q.i.map((_,i)=>i));
+ function draw(){el.innerHTML=a.map((x,p)=>`<div class="row"><button class="ar" data-p="${p}" data-d="-1" aria-label="Naik">▲</button><button class="ar" data-p="${p}" data-d="1" aria-label="Turun">▼</button><span>${q.i[x]}</span></div>`).join("");
+  el.querySelectorAll(".ar").forEach(b=>b.onclick=()=>{const p=+b.dataset.p,n=p+ +b.dataset.d;if(n>=0&&n<a.length){[a[p],a[n]]=[a[n],a[p]];draw()}})}
+ draw();return()=>a.every((x,i)=>x===i)}
+};
+function next(){if(S.q<2){S.q++;ask();return}
+ const z=Z[S.z],ok=S.right>=2;
+ if(ok){S.pts+=z.pt;S.items++;S.badges.push(z.b)}hud();
+ A.innerHTML=`<div class="card"><h2>${ok?"Zona dipulihkan!":"Zona belum pulih"}</h2><p>Kamu menjawab benar <b>${S.right} dari 3</b> soal.</p>
+ ${ok?`<p class="big">🏅</p><div class="badge">${z.b}</div><p class="muted">+${z.pt} poin dan 1 Kompas.</p><button class="go" onclick="${S.z<3?`zone(${S.z+1})`:"boss()"}">${S.z<3?"Lanjut ke zona berikutnya":"Hadapi Boss"}</button>`
+ :`<p>Butuh minimal 2 jawaban benar. Pelajari penjelasannya, lalu coba lagi. Poin soal sebelumnya tetap tersimpan.</p><button class="go" onclick="zone(${S.z})">Ulangi zona</button>`}</div>`}
+function boss(){S.z=4;S.bi=0;hud();A.innerHTML=`<div class="card"><h2>⚔️ Sang Penguasa Kabut Lupa</h2><p>Boss punya 3 fase soal analisis. Tulis argumenmu, bandingkan dengan panduan, lalu nilai jujur: kuat atau lemah. Jawaban lemah membuatmu kehilangan 1 nyawa. Kalahkan minimal 2 fase untuk menang.</p><p class="lives">♥ ♥ ♥</p><button class="go" onclick="phase()">Mulai pertarungan</button></div>`}
+function phase(){const b=BOSS[S.bi];
+ A.innerHTML=`<div class="card"><span class="tag">${b.t} · ${b.p} poin</span><p class="lives">${"♥ ".repeat(S.lives)||"—"}</p><p class="q">${b.q}</p><textarea id="ans" placeholder="Tulis argumenmu di sini..."></textarea><div id="fb"></div><div id="ctl"><button class="go" id="rev">Bandingkan dengan panduan</button></div></div>`;
+ $("rev").onclick=()=>{$("fb").innerHTML=`<div class="fb ok"><b>Panduan penilaian:</b> ${b.g}</div><p>Menurutmu, jawabanmu...</p>`;
+  $("ctl").innerHTML=`<button class="go" onclick="judge(1)">Kuat, serang boss!</button> <button class="go alt" onclick="judge(0)">Masih lemah</button>`}}
+function judge(w){const b=BOSS[S.bi];if(w){S.pts+=b.p;S.bwin++}else S.lives--;S.bi++;hud();
+ if(S.bi<3&&S.lives>0){phase();return}end()}
+function end(){const win=S.bwin>=2,p=S.pts;
+ const rank=p>=600?["👑","Arsiparis Agung"]:p>=400?["🥇","Arsiparis Senior"]:["🥈","Arsiparis Muda (disarankan mengulang)"];
+ A.innerHTML=`<div class="card"><h2>${win?"Kabut Lupa tersingkir!":"Kabut Lupa masih menyelimuti..."}</h2><p>Kamu mengalahkan ${S.bwin} dari 3 fase boss.${win?"":" Coba lagi dari awal untuk memulihkan arsip."}</p>
+ <p class="big">${rank[0]}</p><h3>${rank[1]}</h3><p><b>${p} poin</b></p><div>${S.badges.map(b=>`<span class="badge">🏅 ${b}</span>`).join("")}</div>
+ <p class="muted">Refleksi: bentuk penjajahan mana yang paling mengubah kehidupan rakyat, dan mengapa?</p><button class="go" onclick="start()">Main lagi</button></div>`}
+start();
+</script>
+</body>
+</html>
